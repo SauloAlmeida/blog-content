@@ -2,7 +2,7 @@
 author:  Saulo Almeida
 pubDatetime: 2024-05-27T03:00:00Z
 modDatetime: 2024-05-2T03:00:00Z
-title: Explorando Docker
+title: Explorando Docker!
 slug: explorando-docker
 featured: true
 draft: false
