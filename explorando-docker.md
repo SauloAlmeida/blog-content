@@ -1,7 +1,7 @@
 ---
-author:  Saulo Almeida
+author: Saulo Almeida
 pubDatetime: 2024-05-27T03:00:00Z
-modDatetime: 2024-05-2T03:00:00Z
+modDatetime: 2024-06-26T08:32:00Z
 title: Explorando Docker!
 slug: explorando-docker
 featured: true
@@ -16,63 +16,58 @@ description: Uma plataforma para desenvolvimento, entrega e execução de aplica
 ## O que é?
 
 É uma solução altamente flexível para o desenvolvimento, entrega e execução de aplicações. Com Docker, você pode criar, implantar e gerenciar suas aplicações de forma eficiente e escalável.
-
 #### Docker Client (CLI)
 É a camada de interação dos usuários, onde são executados dos comandos. Através dele que é possível de comunicar com o dockerd, vulgo Docker Daemon.
 #### Docker Daemon
 Escuta o Docker Client, através de requisições de API e gerencia os objetos do Docker, como imagens, containers, networks e volumes.
 #### Registry
-É o repositório de imagens docker.
+Repositório de imagens docker.
 
 ## 📦Containers
 É uma instância de uma imagem Docker. Pode criar, iniciar, parar, mover, ou deletar o container usando o Docker CLI.
 ## 🛠️Comandos
 
-- `docker build`: Usada para criar uma imagem docker a partir de um Dockerfile
+- `docker container build`: Usado para criar uma imagem docker a partir de um Dockerfile
     - Exemplo: `docker build -t <docker_image_name>:<tag> . `
-	* Exemplo real: `docker build -f "./api/Dockerfile" --force -rm -t api:latest  --build-arg "BUILD_CONFIGURATION=Release" .`
 	
-- `docker run`: Usada para executar uma imagem docker em um container;
+- `docker container run`: Usado para executar uma imagem docker em um container;
     - Exemplo: `docker run -d(detached/daemon) -p(configure ports) <machine_port>:<container_port> <image_name>`
     - Exemplo para conectar com o entrypoint (o processo principal com bash): `docker container run -it ubuntu`
     
-- `docker exec`: Usada para executar um comando dentro de um container existente e informando o comando;
-    - Exemplo: `docker exec -it <container_name> <command_name>`
-    - Exemplo real: `docker exec -it nginx bash` (Pois o entrypoint do nginx não é um bash)
+- `docker container exec`: Usado para executar um comando dentro de um container existente e informando o comando;
+    - Exemplo: `docker exec -it nginx bash` (Pois o entrypoint do nginx não é um bash)
 
-- `docker attach`: Usado para se conectar ao container em execução;
+- `docker container attach`: Usado para se conectar ao container em execução;
 	- Exemplo: `docker container attach <container_id> || <container_name>`
 
-* `docker tag`: Usado para associar a imagem gerada com o endereço do repositório;
+* `docker container tag`: Usado para associar a imagem gerada com o endereço do repositório;
 	* Exemplo real: `docker image tag <container_id> || <container_name:tag> ghcr.io/sauloalmeida/saulo.api:latest`
-
-- `docker ps`: Usada para listar containers em execução;
+- `docker container ps`: Usada para listar containers em execução;
     - Exemplo: `docker ps`
     
-- `docker stop`: Usada para parar um container;
+- `docker container stop`: Usada para parar um container;
     - Exemplo: `docker stop <container_name>`
     
-- `docker start`: Usada para iniciar um container;
+- `docker container start`: Usada para iniciar um container;
     - Exemplo: `docker start <container_name>
 
-- `docker restart`: Usado para reiniciar um container; 
+- `docker container restart`: Usado para reiniciar um container; 
 	-  Exemplo: `docker restart <container_name>
 
-- `docker inspect`: Usado para saber os detalhes do container; 
+- `docker container inspect`: Usado para saber os detalhes do container; 
 	-  Exemplo: `docker inspect <container_name>
 
-- `docker pull`: Usada para baixar uma imagem do Docker Hub;
+- `docker image pull`: Usada para baixar uma imagem do Docker Hub;
     - Exemplo: `docker pull <image_name>
     
-- `docker push`: Usada para enviar uma imagem para o Docker Hub;
+- `docker image push`: Usada para enviar uma imagem para o Docker Hub;
     - Exemplo: `docker push <container_registry/image_name:tag>` 
     
-- `docker rm`: Usada para remover um container;
-    - Exemplo: `docker rm <container_name>`
-    - Exemplo real (quando está em execução): `docker container rm -f <container_id or container_name>` `
+- `docker container rm`: Usada para remover um container;
+    - Exemplo (quando está em execução): `docker container rm -f <container_id or container_name>` `
 
-- `docker rmi`: Usada para remover uma imagem;
-    - Exemplo: `docker rmi <image_name>`
+- `docker image rm`: Usada para remover uma imagem;
+    - Exemplo: `docker iamge rm <image_id>`
     
 - `docker container logs`: Usado para monitorar a saída do container.
 	- Exemplo: `docker container logs <container_id or container_name>`
@@ -93,6 +88,7 @@ Escuta o Docker Client, através de requisições de API e gerencia os objetos d
 ``-v``: Irá conectar um volume ao container, exemplo: -v my_volume:/path/in/container.
 `-m`: Irá definir a quantidade memória para o container: `docker run -d -m 128M nginx`
 `-cups`: Irá definir a quantidade de CORES: `docker run -d --cpus 0.5 nginx`
+
 ## 🌐Network
 É a forma como containers se comunicam entre si, possibilitando troca de dados.
 #### Tipos
@@ -119,12 +115,12 @@ Quando é feito a vinculação de um diretório para um volume.
 * `docker volume create <nome_do_volume>`: Irá criar um volume.
 * `docker volume inspect <nome_do_volume>`: Irá retornar as especificações do volume.
 	* WSL Windows: A pasta dos volumes fica nesse diretório: `\\wsl.localhost\docker-desktop-data\data\docker\volumes`
-* `-v`: Vincular ao container, ex: `docker run -it --name app-backup -p 8989:5000 -e FOLDER=app-backup -v /etc/backup:/container/backup app-backup.api:latest`
-* `docker volume prune`: Irá remover todos os volumes que não estiver sendo utilizado.
+* `-v`: Vincular ao container
+	* Exemplo: `docker run -it --name app-backup -p 8989:5000 -e FOLDER=app-backup -v /etc/backup:/container/backup app-backup.api:latest`
+* `docker volume prune`: Irá remover todos os volumes que não estiverem sendo utilizados.
 ##### Parâmetros
-``,ro``: Apenas permissão de leitura, ex: `docker container run -it --mount type=bind,src=/minha/pasta,dst=/container/pasta,ro <nome_da_imagem>`
-###### Desafios
-* Criar uma rotina de backup flexível, apenas com Dockerfile + AWS CLI.
+* ``,ro``: Apenas permissão de leitura.
+	* Exemplo: `docker container run -it --mount type=bind,src=/minha/pasta,dst=/container/pasta,ro <nome_da_imagem>`
 ## 📋Dockerfile
 
 Manual de instruções para criação de uma imagem do container.
@@ -147,7 +143,7 @@ CMD ["nginx", "-g", "daemon off;"]
 ```
 <small>Cria uma imagem com o Nginx instalado e configurado para servir um arquivo HTML na porta 80.</small>
 
-### Muiltistage
+### Muilti-stage
 
 ```dockerfile
 FROM golang AS build
